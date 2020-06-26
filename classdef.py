@@ -6,9 +6,9 @@ RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
 
-class node(object):
+class Node(object):
     # class definition for the nodes
-    def __init__(self, x, y, width, height):
+    def __init__(self, x=0, y=0, width=0, height=0):
         self.x = x
         self.y = y
         self.width = width
@@ -34,3 +34,16 @@ class node(object):
 
     def getfcost(self):
         return self.gcost + self.hcost
+
+    def getNeighbours(self):
+        for row in range(-1, 2):
+            for col in range(-1, 2):
+                print(row, col)
+
+
+# class Grid(object):
+#     # class definition for the grid
+#     def __init__(self, rows, cols):
+#         self.rows = rows
+#         self.cols = cols
+#         # creating the list of nodes in grid
