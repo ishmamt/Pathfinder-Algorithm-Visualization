@@ -39,7 +39,7 @@ class Node(object):
     def getfcost(self):
         return self.gcost + self.hcost
 
-    def getNeighbours(self, grid):
+    def getNeighbours(self, mainGrid):
         for row in range(-1, 2):
             for col in range(-1, 2):
                 print(row, col)
@@ -50,15 +50,28 @@ class Node(object):
 
 class Grid(object):
     # class definition for the grid
-    def __init__(self, x, y, num):
+    def __init__(self, x, y, width, height, num):
         self.x = x  # x, y is the position of the first node in grid
         self.y = y
+        self.width = width
+        self.height = height
         self.num = num  # number on nodes in grid. It dictates the width of the nodes
         self.grid = self.createGrid()
+        self.drawingWalls = True  # toggle for if the user is drawing walls
+        self.drawingStart = False  # toggle for if the user is drawing start node
+        self.drawingEnd = False  # toggle for if the user is drawing end node
+        # self.speed = 0  # this indicates the delay which controls the speed of the visualization
+        self.nodeSize = width // num
 
     def createGrid(self):
         return [[Node() for col in range(self.num)] for row in range(self.num)]  # returns a grid based on the number of nodes
 
     def makeRandMaze(self):
         # makes a random maze
+        pass
+
+    def getGridPos(self):
+        return (self.x, self.y, self.width, self.height)  # returns the dimentions of the whole grid
+
+    def draw(self):
         pass

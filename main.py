@@ -16,15 +16,17 @@ HEIGHT = 700
 # colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 # creating the grid
-mainGrid = Grid(0, 0, 100)
+mainGrid = Grid(round(WIDTH * 0.25), 0, WIDTH - round(WIDTH * 0.25), HEIGHT, 100)
 
 
 # functions
 def redraw():
     win.fill(BLACK)  # fills the window after each frame
-    pygame.draw.rect(win, WHITE, (0, 0, round(WIDTH * 0.25), HEIGHT))
+    pygame.draw.rect(win, WHITE, (0, 0, round(WIDTH * 0.25), HEIGHT))  # draws frame for holding the options
+    pygame.draw.rect(win, RED, mainGrid.getGridPos())  # draws frame for the node grid
     pygame.display.update()
 
 
