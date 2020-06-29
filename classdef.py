@@ -8,15 +8,15 @@ import pygame
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
 
 class Node(object):
     # class definition for the nodes
-    def __init__(self, x=0, y=0, width=0, height=0):
+    def __init__(self, x=0, y=0, dim=0):
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
+        self.dim = dim
         self.col = WHITE
         self.start = False
         self.end = False
@@ -36,6 +36,9 @@ class Node(object):
         self.col = RED
         self.hcost = 0
 
+    def setWall(self):
+        self.col = BLACK
+
     def getfcost(self):
         return self.gcost + self.hcost
 
@@ -44,8 +47,14 @@ class Node(object):
             for col in range(-1, 2):
                 print(row, col)
 
-    def draw(self):
-        pass
+    def getNodePos(self):
+        return (self.x, self.y, self.dim, self.dim)
+
+    def draw(self, win):
+        if self.col == WHITE:
+            pygame.draw.rect(win, BLACK, self.getNodePos(), 1)  # we are drawing them as black to get the grid border effect
+        else:
+            pygame.draw.rect(win, self.col, self.getNodePos())
 
 
 class Grid(object):
@@ -56,15 +65,15 @@ class Grid(object):
         self.width = width
         self.height = height
         self.num = num  # number on nodes in grid. It dictates the width of the nodes
-        self.grid = self.createGrid()
         self.drawingWalls = True  # toggle for if the user is drawing walls
         self.drawingStart = False  # toggle for if the user is drawing start node
         self.drawingEnd = False  # toggle for if the user is drawing end node
         # self.speed = 0  # this indicates the delay which controls the speed of the visualization
-        self.nodeSize = width // num
+        self.nodeDim = self.width // self.num  # dimentions of each node
+        self.grid = self.createGrid()
 
     def createGrid(self):
-        return [[Node() for col in range(self.num)] for row in range(self.num)]  # returns a grid based on the number of nodes
+        return [[Node((col * self.nodeDim) + self.x, (row * self.nodeDim) + self.y, self.nodeDim) for col in range(self.num)] for row in range(self.height // self.nodeDim)]  # returns a grid based on the number of nodes
 
     def makeRandMaze(self):
         # makes a random maze
@@ -73,5 +82,7 @@ class Grid(object):
     def getGridPos(self):
         return (self.x, self.y, self.width, self.height)  # returns the dimentions of the whole grid
 
-    def draw(self):
-        pass
+    def draw(self, win):
+        for row in range(self.height // self.nodeDim):
+            for col in range(self.num):
+                self.grid[row][col].draw(win)
