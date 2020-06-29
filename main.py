@@ -20,17 +20,17 @@ RED = (255, 0, 0)
 
 # creating the grid
 mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 10)
-mainGrid.grid[2][4].setStart()
-mainGrid.grid[5][9].setEnd()
-mainGrid.grid[9][1].setWall()
+# mainGrid.grid[2][3].setStart()
+# mainGrid.grid[5][9].setEnd()
+# mainGrid.grid[9][1].setWall()
+
 
 # functions
-
 
 def redraw():
     win.fill(BLACK)  # fills the window after each frame
     pygame.draw.rect(win, RED, (0, 0, round(WIDTH * 0.25), HEIGHT))  # draws frame for holding the options
-    pygame.draw.rect(win, WHITE, mainGrid.getGridPos())  # draws frame for the node grid
+    pygame.draw.rect(win, WHITE, mainGrid.getPos())  # draws frame for the node grid
     mainGrid.draw(win)
     pygame.display.update()
 
@@ -50,6 +50,8 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False  # stop the game if user tries to quit
+        if pygame.mouse.get_pressed()[0]:  # only detects left click
+            mainGrid.clickOnGrid(pygame.mouse.get_pos())  # checks if the click happened on grid
     redraw()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
