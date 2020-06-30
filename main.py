@@ -31,7 +31,7 @@ def redraw():
     win.fill(BLACK)  # fills the window after each frame
     pygame.draw.rect(win, RED, (0, 0, round(WIDTH * 0.25), HEIGHT))  # draws frame for holding the options
     pygame.draw.rect(win, WHITE, mainGrid.getPos())  # draws frame for the node grid
-    mainGrid.draw(win)
+    mainGrid.draw(win, buttonFont)
     pygame.display.update()
 
 
@@ -41,6 +41,7 @@ win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Pathfinder Visualization')
 clk = pygame.time.Clock()
 FPS = 60  # frames per second
+buttonFont = pygame.font.SysFont('Microsoft YaHei Light', 25)  # button font
 run = True  # for controlling the main loop
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,6 +53,7 @@ while run:
             run = False  # stop the game if user tries to quit
         if pygame.mouse.get_pressed()[0]:  # only detects left click
             mainGrid.clickOnGrid(pygame.mouse.get_pos())  # checks if the click happened on grid
+            # mainGrid.clickOnSidebar(pygame.mouse.get())
     redraw()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

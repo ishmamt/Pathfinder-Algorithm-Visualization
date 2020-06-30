@@ -9,6 +9,9 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+INACTIVE_BUTTON = BLACK
+ACTIVE_BUTTON = GREEN
+BUTTON_TEXT_COL = WHITE
 
 
 class Node(object):
@@ -102,44 +105,134 @@ class Grid(object):
         # makes a random maze
         pass
 
+    def clearGrid(self):
+        # clears the grid
+        for row in range(len(self.grid)):
+            for col in range(len(self.grid[0])):
+                self.grid[row][col].clear()
+
     def getPos(self):
         return (self.x, self.y, self.width, self.height)  # returns the dimentions of the whole grid
 
-    def draw(self, win):
+    def draw(self, win, buttonFont):
         for row in range(self.height // self.nodeDim):
             for col in range(self.num):
                 self.grid[row][col].draw(win)
-        self.drawButtons(win)  # draws the buttons
+        self.drawButtons(win, buttonFont)  # draws the buttons
 
-    def drawButtons(self, win):
-        pygame.draw.rect(win, BLACK, self.setStartButton)  # drawing the start button
-        pygame.draw.rect(win, BLACK, self.setEndButton)  # drawing the end button
-        pygame.draw.rect(win, BLACK, self.setWallButton)  # drawing the wall button
-        pygame.draw.rect(win, BLACK, self.setEraseButton)  # drawing the erase button
-        pygame.draw.rect(win, BLACK, self.randMazeButton)  # drawing the random maze button
-        pygame.draw.rect(win, BLACK, self.clearButton)  # drawing the clear grid button
-        pygame.draw.rect(win, BLACK, self.startVizButton)  # drawing the startviz button
+    def drawButtons(self, win, buttonFont):
+        if self.drawingStart:
+            pygame.draw.rect(win, ACTIVE_BUTTON, self.setStartButton)  # drawing the start button
+        else:
+            pygame.draw.rect(win, INACTIVE_BUTTON, self.setStartButton)  # drawing the start button
+        startButton = buttonFont.render('Draw start', 1, BUTTON_TEXT_COL)
+        win.blit(startButton, (self.setStartButton.left + 30, self.setStartButton.top + 11))
+
+        if self.drawingEnd:
+            pygame.draw.rect(win, ACTIVE_BUTTON, self.setEndButton)  # drawing the end button
+        else:
+            pygame.draw.rect(win, INACTIVE_BUTTON, self.setEndButton)  # drawing the end button
+        endButton = buttonFont.render('Draw end', 1, BUTTON_TEXT_COL)
+        win.blit(endButton, (self.setEndButton.left + 35, self.setEndButton.top + 11))
+
+        if self.drawingWalls:
+            pygame.draw.rect(win, ACTIVE_BUTTON, self.setWallButton)  # drawing the wall button
+        else:
+            pygame.draw.rect(win, INACTIVE_BUTTON, self.setWallButton)  # drawing the wall button
+        wallButton = buttonFont.render('Draw walls', 1, BUTTON_TEXT_COL)
+        win.blit(wallButton, (self.setWallButton.left + 35, self.setWallButton.top + 11))
+
+        if self.drawingErase:
+            pygame.draw.rect(win, ACTIVE_BUTTON, self.setEraseButton)  # drawing the erase button
+        else:
+            pygame.draw.rect(win, INACTIVE_BUTTON, self.setEraseButton)  # drawing the erase button
+        eraseButton = buttonFont.render('Erase', 1, BUTTON_TEXT_COL)
+        win.blit(eraseButton, (self.setEraseButton.left + 52, self.setEraseButton.top + 11))
+
+        pygame.draw.rect(win, INACTIVE_BUTTON, self.randMazeButton)  # drawing the random maze button
+        mazeButton = buttonFont.render('Random maze', 1, BUTTON_TEXT_COL)
+        win.blit(mazeButton, (self.randMazeButton.left + 15, self.randMazeButton.top + 11))
+
+        pygame.draw.rect(win, INACTIVE_BUTTON, self.clearButton)  # drawing the clear grid button
+        clearGridButton = buttonFont.render('Clear Grid', 1, BUTTON_TEXT_COL)
+        win.blit(clearGridButton, (self.clearButton.left + 29, self.clearButton.top + 11))
+
+        pygame.draw.rect(win, INACTIVE_BUTTON, self.startVizButton)  # drawing the startviz button
+        vizButton = buttonFont.render('Start Viz', 1, BUTTON_TEXT_COL)
+        win.blit(vizButton, (self.startVizButton.left + 35, self.startVizButton.top + 20))
 
     def clickOnGrid(self, mousePos):
         if mousePos[1] // self.nodeDim >= len(self.grid) or (mousePos[0] - self.x) // self.nodeDim >= len(self.grid[0]):  # to stay in bounds of the grid list
             return
         if mousePos[0] < self.x:  # checking if the click is done on the grid
+            self.clickOnSidebar(mousePos)
             return
+        if self.vizStarted:
+            return  # cannot draw on screen if the viz has already started
+
         node = self.getGridPos(mousePos)
-        # approaching according to the grid state
+        # proceeding according to the grid state
         if self.drawingStart:
-            if self.start is not None:
-                self.start.clear()  # clears if another node for the same purpose exists
-            node.setStart()
-            self.start = node
+            if node.col == WHITE:
+                if self.start is not None:
+                    self.start.clear()  # clears if another node for the same purpose exists
+                node.setStart()
+                self.start = node
         elif self.drawingEnd:
-            if self.end is not None:
-                self.end.clear()  # clears if another node for the same purpose exists
-            node.setEnd()
-            self.end = node
+            if node.col == WHITE:
+                if self.end is not None:
+                    self.end.clear()  # clears if another node for the same purpose exists
+                node.setEnd()
+                self.end = node
         elif self.drawingWalls:
             node.setWall()
+        elif self.drawingErase:
+            if node == self.start:
+                self.start = None
+            elif node == self.end:
+                self.end = None
+            node.clear()
 
     def getGridPos(self, mousePos):
         # this translates the mouse click to a node in the array
         return self.grid[mousePos[1] // self.nodeDim][(mousePos[0] - self.x) // self.nodeDim]
+
+    def clickOnSidebar(self, mousePos):
+        # checks which button from the sidebar has been pressed
+        if self.buttonClick(mousePos, self.setStartButton):
+            if not self.drawingStart and not self.vizStarted:
+                self.clearState()
+                self.drawingStart = True
+        elif self.buttonClick(mousePos, self.setEndButton):
+            if not self.drawingEnd and not self.vizStarted:
+                self.clearState()
+                self.drawingEnd = True
+        elif self.buttonClick(mousePos, self.setWallButton):
+            if not self.drawingWalls and not self.vizStarted:
+                self.clearState()
+                self.drawingWalls = True
+        elif self.buttonClick(mousePos, self.setEraseButton):
+            if not self.drawingErase and not self.vizStarted:
+                self.clearState()
+                self.drawingErase = True
+        elif self.buttonClick(mousePos, self.randMazeButton) and not self.vizStarted:
+            self.makeRandMaze()
+        elif self.buttonClick(mousePos, self.clearButton) and not self.vizStarted:
+            self.clearGrid()
+            self.clearState()
+            self.drawingWalls = True  # after clearing the grid ut seems natural to default to drawing walls
+        elif self.buttonClick(mousePos, self.startVizButton) and not self.vizStarted:
+            if not self.vizStarted:
+                self.clearState()
+                self.vizStarted = True  # we need to start the vizualization here
+
+    def clearState(self):
+        # clears the state of the grid
+        self.drawingStart = False
+        self.drawingEnd = False
+        self.drawingWalls = False
+        self.drawingErase = False
+
+    def buttonClick(self, mousePos, button):
+        # returns if a button has been pressed
+        return (mousePos[0] >= button.left and mousePos[0] <= button.right) and (mousePos[1] >= button.top and mousePos[1] <= button.bottom)
