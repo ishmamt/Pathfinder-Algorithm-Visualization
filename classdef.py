@@ -1,7 +1,9 @@
-# Script for all the classes
+# script for all the classes
+# this handles the drawing as well as the button presses for all the pygame window
 
 # imports
 import pygame
+import random
 
 
 # constants
@@ -21,8 +23,6 @@ class Node(object):
         self.y = y
         self.dim = dim
         self.col = WHITE
-        # self.start = False
-        # self.end = False
         self.neighbours = list()  # list of all the neighbours
         self.gcost = 10000000000  # any high value ie. infinity
         self.hcost = None  # heuristic cost
@@ -103,13 +103,20 @@ class Grid(object):
 
     def makeRandMaze(self):
         # makes a random maze
-        pass
+        self.clearGrid()
+        self.clearState()
+        for row in range(len(self.grid)):
+            for col in range(len(self.grid[0])):
+                if bool(random.getrandbits(1)):
+                    self.grid[row][col].setWall()
 
     def clearGrid(self):
         # clears the grid
         for row in range(len(self.grid)):
             for col in range(len(self.grid[0])):
                 self.grid[row][col].clear()
+        self.start = None
+        self.end = None
 
     def getPos(self):
         return (self.x, self.y, self.width, self.height)  # returns the dimentions of the whole grid

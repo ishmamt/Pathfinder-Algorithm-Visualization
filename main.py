@@ -2,7 +2,6 @@
 
 
 # imports
-from classdef import Node
 from classdef import Grid
 import pygame
 
@@ -19,7 +18,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
 # creating the grid
-mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 10)
+mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 40)
 # mainGrid.grid[2][3].setStart()
 # mainGrid.grid[5][9].setEnd()
 # mainGrid.grid[9][1].setWall()
