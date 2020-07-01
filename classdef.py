@@ -6,7 +6,7 @@ import pygame
 import random
 
 
-# constants
+# colors
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
@@ -14,15 +14,22 @@ BLACK = (0, 0, 0)
 INACTIVE_BUTTON = BLACK
 ACTIVE_BUTTON = GREEN
 BUTTON_TEXT_COL = WHITE
+ACTIVE_NODE = (26, 198, 255)
+FRINGE = (0, 82, 204)
+
+# constants
+COST = 10  # the cost to travel from a node to the other
 
 
 class Node(object):
     # class definition for the nodes
-    def __init__(self, x=0, y=0, dim=0):
+    def __init__(self, x=0, y=0, dim=0, gridx=0, gridy=0):
         self.x = x
         self.y = y
         self.dim = dim
         self.col = WHITE
+        self.gridx = gridx
+        self.gridy = gridy
         self.neighbours = list()  # list of all the neighbours
         self.gcost = 10000000000  # any high value ie. infinity
         self.hcost = None  # heuristic cost
@@ -48,13 +55,24 @@ class Node(object):
         self.hcost = None
         self.fcost = None
 
-    def getfcost(self):
-        return self.gcost + self.hcost
+    def calcFcost(self):
+        return self.gcost + self.hcost  # returns the fcost of any neighbour node
+
+    def calcGcost(self):
+        return self.gcost + COST  # returns the gcost of any neighbour node
 
     def getNeighbours(self, mainGrid):
+        self.col = ACTIVE_NODE
         for row in range(-1, 2):
             for col in range(-1, 2):
-                print(row, col)
+                if (row == 0 and col == 0) or (abs(row) == 1 and abs(col) == 1):  # doesn't go diagonally
+                    continue
+                if self.gridy + row >= 0 and self.gridy + row < len(mainGrid.grid) and self.gridx + col >= 0 and self.gridx + col < len(mainGrid.grid[0]):
+                    evaluating = mainGrid.grid[self.gridy + row][self.gridx + col]  # the neighbour we are evaluating
+                    if evaluating in mainGrid.closed or evaluating.col == BLACK:
+                        continue
+                    self.neighbours.append(evaluating)
+                    evaluating.col = FRINGE
 
     def getNodePos(self):
         return (self.x, self.y, self.dim, self.dim)
@@ -94,12 +112,14 @@ class Grid(object):
         self.clearButton = pygame.Rect(10, 410, 150, 40)
         self.startVizButton = pygame.Rect(10, 530, 150, 60)
 
-        # for keeping track of the start and end
+        # for the pathfinder
         self.start = None
         self.end = None
+        self.open = list()
+        self.closed = list()
 
     def createGrid(self):
-        return [[Node((col * self.nodeDim) + self.x, (row * self.nodeDim) + self.y, self.nodeDim) for col in range(self.num)] for row in range(self.height // self.nodeDim)]  # returns a grid based on the number of nodes
+        return [[Node((col * self.nodeDim) + self.x, (row * self.nodeDim) + self.y, self.nodeDim, col, row) for col in range(self.num)] for row in range(self.height // self.nodeDim)]  # returns a grid based on the number of nodes
 
     def makeRandMaze(self):
         # makes a random maze
@@ -169,6 +189,7 @@ class Grid(object):
         win.blit(vizButton, (self.startVizButton.left + 35, self.startVizButton.top + 20))
 
     def clickOnGrid(self, mousePos):
+        # function to handle the drawing
         if mousePos[1] // self.nodeDim >= len(self.grid) or (mousePos[0] - self.x) // self.nodeDim >= len(self.grid[0]):  # to stay in bounds of the grid list
             return
         if mousePos[0] < self.x:  # checking if the click is done on the grid
@@ -228,10 +249,9 @@ class Grid(object):
             self.clearGrid()
             self.clearState()
             self.drawingWalls = True  # after clearing the grid ut seems natural to default to drawing walls
-        elif self.buttonClick(mousePos, self.startVizButton) and not self.vizStarted:
-            if not self.vizStarted:
-                self.clearState()
-                self.vizStarted = True  # we need to start the vizualization here
+        elif self.buttonClick(mousePos, self.startVizButton) and not self.vizStarted and not (self.start is None or self.end is None):
+            self.clearState()
+            self.vizStarted = True  # we need to start the vizualization here
 
     def clearState(self):
         # clears the state of the grid

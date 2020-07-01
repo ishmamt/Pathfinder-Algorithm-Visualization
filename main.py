@@ -3,6 +3,7 @@
 
 # imports
 from classdef import Grid
+from dijkstra import dijkstra
 import pygame
 
 
@@ -18,13 +19,15 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
 # creating the grid
-mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 40)
-# mainGrid.grid[2][3].setStart()
-# mainGrid.grid[5][9].setEnd()
-# mainGrid.grid[9][1].setWall()
+mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 10)
 
+# the pathfinding algorithm that user choses
+# algorithms = [dijkstra(mainGrid)]
+# pathfinder = algorithms[user_choice]
+pathfinder = dijkstra
 
 # functions
+
 
 def redraw():
     win.fill(BLACK)  # fills the window after each frame
@@ -52,7 +55,15 @@ while run:
             run = False  # stop the game if user tries to quit
         if pygame.mouse.get_pressed()[0]:  # only detects left click
             mainGrid.clickOnGrid(pygame.mouse.get_pos())  # checks if the click happened on grid
-            # mainGrid.clickOnSidebar(pygame.mouse.get())
+    if mainGrid.vizStarted:
+        if mainGrid.start not in mainGrid.open and mainGrid.start not in mainGrid.closed:
+            mainGrid.open.append(mainGrid.start)  # append the start node to the open list
+        if pathfinder(mainGrid):
+            if len(mainGrid.open) < 1:
+                print('No possible path.')
+            else:
+                print('Path found.')
+            run = False
     redraw()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
