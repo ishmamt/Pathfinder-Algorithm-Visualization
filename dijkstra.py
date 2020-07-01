@@ -1,7 +1,5 @@
 # script for dijkstra's algorithm
 
-# imports
-# from classdef import Node, Grid
 
 # colors
 CLOSED = (215, 215, 193)
@@ -24,4 +22,5 @@ def dijkstra(mainGrid):
             neighbour.prev = current
     mainGrid.open.remove(current)
     mainGrid.closed.append(current)
-    current.col = CLOSED
+    if current != mainGrid.start:
+        current.col = CLOSED

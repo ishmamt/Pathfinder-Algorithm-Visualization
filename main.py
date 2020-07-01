@@ -4,6 +4,8 @@
 # imports
 from classdef import Grid
 from dijkstra import dijkstra
+from astar import aStar
+from showPath import showpath
 import pygame
 
 
@@ -22,9 +24,9 @@ RED = (255, 0, 0)
 mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 10)
 
 # the pathfinding algorithm that user choses
-# algorithms = [dijkstra(mainGrid)]
+algorithms = [dijkstra, aStar]
 # pathfinder = algorithms[user_choice]
-pathfinder = dijkstra
+pathfinder = algorithms[0]
 
 # functions
 
@@ -61,9 +63,11 @@ while run:
         if pathfinder(mainGrid):
             if len(mainGrid.open) < 1:
                 print('No possible path.')
+                run = False
             else:
                 print('Path found.')
-            run = False
+                showpath(mainGrid.end.prev)
+            # run = False
     redraw()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

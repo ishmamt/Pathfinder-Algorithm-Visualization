@@ -14,7 +14,6 @@ BLACK = (0, 0, 0)
 INACTIVE_BUTTON = BLACK
 ACTIVE_BUTTON = GREEN
 BUTTON_TEXT_COL = WHITE
-ACTIVE_NODE = (51, 214, 255)
 FRINGE = (0, 82, 204)
 
 # constants
@@ -62,7 +61,7 @@ class Node(object):
         return self.gcost + COST  # returns the gcost of any neighbour node
 
     def getNeighbours(self, mainGrid):
-        self.col = ACTIVE_NODE
+        # self.col = ACTIVE_NODE
         for row in range(-1, 2):
             for col in range(-1, 2):
                 if (row == 0 and col == 0) or (abs(row) == 1 and abs(col) == 1):  # doesn't go diagonally
@@ -72,7 +71,8 @@ class Node(object):
                     if evaluating in mainGrid.closed or evaluating.col == BLACK:
                         continue
                     self.neighbours.append(evaluating)
-                    evaluating.col = FRINGE
+                    if evaluating != mainGrid.end:
+                        evaluating.col = FRINGE
 
     def getNodePos(self):
         return (self.x, self.y, self.dim, self.dim)
@@ -80,6 +80,9 @@ class Node(object):
     def draw(self, win):
         if self.col == WHITE:
             pygame.draw.rect(win, BLACK, self.getNodePos(), 1)  # we are drawing them as black to get the grid border effect
+        elif self.col == (255, 255, 51):
+            pygame.draw.rect(win, self.col, self.getNodePos())
+            pygame.draw.rect(win, BLACK, self.getNodePos(), 1)  # drawing the border seperately for 'A E S T H E T I C S'
         else:
             pygame.draw.rect(win, self.col, self.getNodePos())
 
