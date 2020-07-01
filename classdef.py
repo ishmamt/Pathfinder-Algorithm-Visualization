@@ -4,6 +4,7 @@
 # imports
 import pygame
 import random
+import math
 
 
 # colors
@@ -14,10 +15,10 @@ BLACK = (0, 0, 0)
 INACTIVE_BUTTON = BLACK
 ACTIVE_BUTTON = GREEN
 BUTTON_TEXT_COL = WHITE
-FRINGE = (0, 82, 204)
+FRINGE = (0, 82, 204)  # actually this is not the fringe but the unopened nodes in open
 
 # constants
-COST = 10  # the cost to travel from a node to the other
+COST = 5  # the cost to travel from a node to the other
 
 
 class Node(object):
@@ -54,11 +55,11 @@ class Node(object):
         self.hcost = None
         self.fcost = None
 
-    def calcFcost(self):
-        return self.gcost + self.hcost  # returns the fcost of any neighbour node
-
     def calcGcost(self):
         return self.gcost + COST  # returns the gcost of any neighbour node
+
+    def calcHcost(self, end):
+        return math.sqrt((end.x - self.x) ** 2 + (end.y - self.y) ** 2)  # we are using euclidian distance as heuristic function
 
     def getNeighbours(self, mainGrid):
         # self.col = ACTIVE_NODE
@@ -255,6 +256,7 @@ class Grid(object):
         elif self.buttonClick(mousePos, self.startVizButton) and not self.vizStarted and not (self.start is None or self.end is None):
             self.clearState()
             self.vizStarted = True  # we need to start the vizualization here
+            self.start.hcost = self.start.calcHcost(self.end)
 
     def clearState(self):
         # clears the state of the grid

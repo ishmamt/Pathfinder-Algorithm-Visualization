@@ -21,12 +21,12 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
 # creating the grid
-mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 10)
+mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 20)
 
 # the pathfinding algorithm that user choses
 algorithms = [dijkstra, aStar]
 # pathfinder = algorithms[user_choice]
-pathfinder = algorithms[0]
+pathfinder = algorithms[1]
 
 # functions
 
@@ -60,14 +60,14 @@ while run:
     if mainGrid.vizStarted:
         if mainGrid.start not in mainGrid.open and mainGrid.start not in mainGrid.closed:
             mainGrid.open.append(mainGrid.start)  # append the start node to the open list
+            mainGrid.start.hcost = mainGrid.start.calcHcost(mainGrid.end)
+            mainGrid.start.fcost = mainGrid.start.gcost + mainGrid.start.hcost
         if pathfinder(mainGrid):
             if len(mainGrid.open) < 1:
                 print('No possible path.')
                 run = False
             else:
-                print('Path found.')
-                showpath(mainGrid.end.prev)
-            # run = False
+                showpath(mainGrid.end)  # draws the path it has found
     redraw()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
