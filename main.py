@@ -9,6 +9,7 @@ from bestfirst import bestFirst
 from showPath import showpath
 from gui import gui, notFound
 import pygame
+import logging
 
 
 # constants
@@ -44,6 +45,10 @@ pathfinder = algorithms[choice.algo]
 # creating the grid
 mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, choice.nodes)
 
+# setting up a logger
+logging.basicConfig(filename='history.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
+logger = logging.getLogger()  # getting an object called logger
+
 
 # pygaame window
 pygame.init()  # pygame window init
@@ -70,8 +75,7 @@ while run:
             mainGrid.start.fcost = mainGrid.start.gcost + mainGrid.start.hcost
         if pathfinder(mainGrid, delay):
             if len(mainGrid.open) < 1:
-                print('No possible path.')  # path not found
-                run = False
+                run = False  # path not found
             else:
                 showpath(mainGrid.end)  # draws the path it has found
     redraw()
@@ -79,4 +83,7 @@ while run:
 
 if len(mainGrid.open) < 1:  # no valid path found
     notFound()
+    logger.info(f'Algorithm: {choice.algo} Speed: {choice.speed} Nodes in a row: {choice.nodes}. Path not found')
+else:
+    logger.info(f'Algorithm: {choice.algo} Speed: {choice.speed} Nodes in a row: {choice.nodes}. Path found')
 pygame.quit()
