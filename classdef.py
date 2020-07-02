@@ -62,7 +62,6 @@ class Node(object):
         return math.sqrt((end.x - self.x) ** 2 + (end.y - self.y) ** 2)  # we are using euclidian distance as heuristic function
 
     def getNeighbours(self, mainGrid, delay):
-        # self.col = ACTIVE_NODE
         for row in range(-1, 2):
             for col in range(-1, 2):
                 if (row == 0 and col == 0) or (abs(row) == 1 and abs(col) == 1):  # doesn't go diagonally
@@ -117,7 +116,7 @@ class Grid(object):
         self.clearButton = pygame.Rect(10, 410, 150, 40)
         self.startVizButton = pygame.Rect(10, 530, 150, 60)
 
-        # for the pathfinder
+        # for the pathfinder algorithm
         self.start = None
         self.end = None
         self.open = list()
@@ -144,7 +143,7 @@ class Grid(object):
         self.end = None
 
     def getPos(self):
-        return (self.x, self.y, self.width, self.height)  # returns the dimentions of the whole grid
+        return (self.x, self.y, self.width, self.height)  # returns the position of the whole grid
 
     def draw(self, win, buttonFont):
         for row in range(self.height // self.nodeDim):
