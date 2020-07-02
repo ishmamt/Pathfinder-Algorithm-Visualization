@@ -25,7 +25,7 @@ Compile and run  ```main.py```.
 
 - A basic GUI that lets the user choose an algorithm, number of nodes in the grid and the speed of the visualization.
 
-    ![The GUI implemented in the program to take user input](/screenshots/gui.jpg "The GUI" =200x)
+    ![The GUI implemented in the program to take user input](/screenshots/gui.jpg =200x)
 
     User can choose one of three pathfinding algorithms.
 
