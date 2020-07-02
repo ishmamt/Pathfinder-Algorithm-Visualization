@@ -25,11 +25,11 @@ Compile and run  ```main.py```.
 
 - A basic GUI that lets the user choose an algorithm, number of nodes in the grid and the speed of the visualization.
 
-    ![The GUI implemented in the program to take user input](/screenshots/gui.jpg =200x)
+    ![The GUI implemented in the program to take user input](/screenshots/gui.jpg "The GUI")
 
     User can choose one of three pathfinding algorithms.
 
-    ![Dropdown for algorithm selection](/screenshots/dropdown.jpg "Selecting an algorithm to view" =200x)
+    ![Dropdown for algorithm selection](/screenshots/dropdown.jpg "Selecting an algorithm to view")
 
 - It also provides a grid system where the user can:
     > - Draw walls.
@@ -38,17 +38,17 @@ Compile and run  ```main.py```.
     > - Clear the grid
     > - Generate random maze
 
-    ![The grid system](/screenshots/grid.jpg "Grid system" =300x)
+    ![The grid system](/screenshots/grid.jpg "Grid system")
 
     Drawing in the window is simplified for easier usage and intuitive.
 
-    ![Drawing in the grid](/screenshots/draw.jpg "Drawing" =300x)
+    ![Drawing in the grid](/screenshots/draw.jpg "Drawing")
 
 - The random maze generator randomly creates walls and paths. Usually the results are underwhelming as it's just random noise.
-    ![Result of random maze generation](/screenshots/maze.jpg "Random maze" =300x)
+    ![Result of random maze generation](/screenshots/maze.jpg "Random maze")
 
 - The path is highlighted if it is found.
-    ![Path from start to end](/screenshots/path.jpg "Path shown from start to end" =300x)
+    ![Path from start to end](/screenshots/path.jpg "Path shown from start to end")
 
 ## Future Plans
 
