@@ -61,7 +61,7 @@ class Node(object):
     def calcHcost(self, end):
         return math.sqrt((end.x - self.x) ** 2 + (end.y - self.y) ** 2)  # we are using euclidian distance as heuristic function
 
-    def getNeighbours(self, mainGrid):
+    def getNeighbours(self, mainGrid, delay):
         # self.col = ACTIVE_NODE
         for row in range(-1, 2):
             for col in range(-1, 2):
@@ -74,6 +74,7 @@ class Node(object):
                     self.neighbours.append(evaluating)
                     if evaluating != mainGrid.end:
                         evaluating.col = FRINGE
+        pygame.time.delay(delay)
 
     def getNodePos(self):
         return (self.x, self.y, self.dim, self.dim)
@@ -268,3 +269,11 @@ class Grid(object):
     def buttonClick(self, mousePos, button):
         # returns if a button has been pressed
         return (mousePos[0] >= button.left and mousePos[0] <= button.right) and (mousePos[1] >= button.top and mousePos[1] <= button.bottom)
+
+
+class Choice(object):
+    # class for getting the user's choice
+    def __init__(self):
+        self.algo = None
+        self.nodes = None
+        self.speed = None

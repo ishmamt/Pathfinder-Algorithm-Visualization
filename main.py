@@ -2,11 +2,12 @@
 
 
 # imports
-from classdef import Grid
+from classdef import Grid, Choice
 from dijkstra import dijkstra
 from astar import aStar
 from bestfirst import bestFirst
 from showPath import showpath
+from gui import gui
 import pygame
 
 
@@ -20,24 +21,28 @@ HEIGHT = 700
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+BG_COL = (0, 64, 128)
 
-# creating the grid
-mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 20)
-
-# the pathfinding algorithm that user choses
-algorithms = [dijkstra, aStar, bestFirst]
-# pathfinder = algorithms[user_choice]
-pathfinder = algorithms[1]
 
 # functions
 
-
 def redraw():
     win.fill(BLACK)  # fills the window after each frame
-    pygame.draw.rect(win, RED, (0, 0, round(WIDTH * 0.25), HEIGHT))  # draws frame for holding the options
+    pygame.draw.rect(win, BG_COL, (0, 0, round(WIDTH * 0.25), HEIGHT))  # draws frame for holding the options
     pygame.draw.rect(win, WHITE, mainGrid.getPos())  # draws frame for the node grid
     mainGrid.draw(win, buttonFont)
     pygame.display.update()
+
+
+# user input
+choice = Choice()
+gui(choice)
+delay = choice.speed
+algorithms = [dijkstra, aStar, bestFirst]
+pathfinder = algorithms[choice.algo]
+
+# creating the grid
+mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, choice.nodes)
 
 
 # pygaame window
@@ -63,10 +68,10 @@ while run:
             mainGrid.open.append(mainGrid.start)  # append the start node to the open list
             mainGrid.start.hcost = mainGrid.start.calcHcost(mainGrid.end)
             mainGrid.start.fcost = mainGrid.start.gcost + mainGrid.start.hcost
-        if pathfinder(mainGrid):
+        if pathfinder(mainGrid, delay):
             if len(mainGrid.open) < 1:
-                print('No possible path.')
-                run = False
+                print('No possible path.')  # path not found
+                # run = False
             else:
                 showpath(mainGrid.end)  # draws the path it has found
     redraw()

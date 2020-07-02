@@ -5,7 +5,7 @@
 CLOSED = (215, 215, 193)
 
 
-def bestFirst(mainGrid):
+def bestFirst(mainGrid, delay):
     # first check to see if the open list is empty, meaning no possible solution
     if len(mainGrid.open) < 1:
         return True  # we have not found a path so we should stop the viz
@@ -13,7 +13,7 @@ def bestFirst(mainGrid):
     current = mainGrid.open[0]
     if current == mainGrid.end:
         return True
-    current.getNeighbours(mainGrid)
+    current.getNeighbours(mainGrid, delay)
     for neighbour in current.neighbours:
         if neighbour not in mainGrid.open:
             mainGrid.open.append(neighbour)
