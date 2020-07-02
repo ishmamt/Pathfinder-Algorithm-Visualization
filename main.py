@@ -7,7 +7,7 @@ from dijkstra import dijkstra
 from astar import aStar
 from bestfirst import bestFirst
 from showPath import showpath
-from gui import gui
+from gui import gui, notFound
 import pygame
 
 
@@ -71,10 +71,12 @@ while run:
         if pathfinder(mainGrid, delay):
             if len(mainGrid.open) < 1:
                 print('No possible path.')  # path not found
-                # run = False
+                run = False
             else:
                 showpath(mainGrid.end)  # draws the path it has found
     redraw()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+if len(mainGrid.open) < 1:  # no valid path found
+    notFound()
 pygame.quit()

@@ -104,3 +104,18 @@ def gui(choice):
     canvas.pack()
     root.mainloop()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+def notFound():
+    root = tk.Tk()  # creating a root as the main body of the GUI
+    root.title('Path not found')
+    # canvas to hold the shape of GUI by drawing a rectangle
+    canvas = tk.Canvas(root, height=100, width=300)
+    label = tk.Label(root, bg=BG_COL)
+    label.place(relwidth=1, relheight=1)
+    prompt = tk.Label(root, bg=BG_COL, fg='white', text='No path found.', font=myfont)
+    prompt.place(relx=0.25, rely=0.1)
+    button = tk.Button(root, text='Ok', font=buttonfont, command=root.destroy)
+    button.place(relx=0.35, rely=0.5, relwidth=0.3)
+    canvas.pack()
+    root.mainloop()
