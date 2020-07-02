@@ -5,6 +5,7 @@
 from classdef import Grid
 from dijkstra import dijkstra
 from astar import aStar
+from bestfirst import bestFirst
 from showPath import showpath
 import pygame
 
@@ -24,7 +25,7 @@ RED = (255, 0, 0)
 mainGrid = Grid((WIDTH // 4), 0, WIDTH - (WIDTH // 4), HEIGHT, 20)
 
 # the pathfinding algorithm that user choses
-algorithms = [dijkstra, aStar]
+algorithms = [dijkstra, aStar, bestFirst]
 # pathfinder = algorithms[user_choice]
 pathfinder = algorithms[1]
 
