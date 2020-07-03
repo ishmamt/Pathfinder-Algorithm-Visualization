@@ -15,7 +15,7 @@ It has a grid based system for drawing walls, placing starting and ending nodes 
     > ```pip install pygame```
 
 - If for some reason **Tkinter** is not installed in your system (usually it comes with Python). Use any command shell and use the following command:
-    > ```pip install pygame```
+    > ```pip install tkinter```
 
 #### How to run it?
 
