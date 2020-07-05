@@ -55,4 +55,4 @@ Compile and run  ```main.py```.
 I plan to implement better visualization measures to make it interactable in real-time. An online version of this would be nice as it would require no installations.
 
 ### Made By
-<small>&copy; [sed_cat]('https://github.com/ishmamt')  |  2020</small>
+<small>[sed_cat]('https://github.com/ishmamt')  |  2020</small>
